@@ -15,7 +15,7 @@ Here is example usage:
 
     rs = np.random.RandomState(seed=0xfeedface)
 
-    for i in Permutation(1_000_000, rs):
+    for i in Permutation(1_000_000_000, rs):
         # Do something
         pass
 
