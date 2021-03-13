@@ -10,11 +10,12 @@ Package for online generation of large permutations without a large upfront time
 
 Here is example usage:
 
+    import numpy as np
     from fastperm import Permutation
 
-    p = Permutation(1_000_000_000)
+    rs = np.random.RandomState(seed=0xfeedface)
 
-    for i in p:
+    for i in Permutation(1_000_000, rs):
         # Do something
         pass
 
