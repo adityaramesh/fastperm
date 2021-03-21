@@ -2,10 +2,9 @@ import attr
 import math
 import numpy as np
 
-from typing          import Dict, Optional
-from numbers         import Integral
-from collections.abc import Sized, Iterable, Iterator
-from numpy.random    import RandomState
+from typing       import Dict, Optional, Iterable, Iterator, Sized
+from numbers      import Integral
+from numpy.random import RandomState
 
 @attr.s
 class ChunkedRange:
