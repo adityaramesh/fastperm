@@ -2,7 +2,8 @@ import attr
 import math
 import numpy as np
 
-from typing       import Dict, Optional, Iterable, Iterator, Sized
+from copy         import deepcopy
+from typing       import Any, Dict, Optional, Iterable, Iterator, Sized
 from numbers      import Integral
 from numpy.random import RandomState
 
@@ -46,6 +47,7 @@ class Permutation(Sized, Iterable[np.uint64]):
     i:  int         = attr.ib(init=False, default=0)
 
     def __attrs_post_init__(self) -> None:
+        self.init_random_state = deepcopy(self.rs.get_state())
         self.perm = ChunkedRange(self.n)
 
     def __len__(self) -> int:
@@ -61,3 +63,12 @@ class Permutation(Sized, Iterable[np.uint64]):
         j = self.rs.randint(self.i, self.n)
         self.perm[self.i], self.perm[j], self.i = self.perm[j], self.perm[self.i], self.i + 1
         return self.perm[self.i - 1]
+
+    def __getstate__(self) -> Dict[str, Any]:
+        return {'init_random_state': self.init_random_state, 'i': self.i}
+
+    def __setstate__(self, state: Dict[str, Any]) -> None:
+        self.rs.set_state(state['init_random_state'])
+
+        while self.i != state['i']:
+            next(self)

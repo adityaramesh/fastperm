@@ -1,4 +1,5 @@
 import time
+import pickle
 import numpy as np
 
 from fastperm import Permutation
@@ -34,10 +35,23 @@ def test_3() -> None:
 
 def test_4() -> None:
     s = Permutation(1_000_000_000)
+    print(s.__dict__)
     print(next(s))
+
+def test_5() -> None:
+    s = Permutation(1_000_000)
+    [next(s) for _ in range(1024)]
+
+    state = pickle.dumps(s)
+    xs = [next(s) for _ in range(1024)]
+
+    s = pickle.loads(state)
+    ys = [next(s) for _ in range(1024)]
+    assert xs == ys
 
 if __name__ == '__main__':
     #test_1()
     #test_2()
     #test_3()
-    test_4()
+    #test_4()
+    test_5()
