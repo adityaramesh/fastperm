@@ -11,7 +11,7 @@ from numpy.random import RandomState
 class ChunkedRange:
     n:          int                   = attr.ib(validator=lambda i, a, x: x >= 1) # type: ignore
     chunk_size: int                   = attr.ib(default=2 ** 20, validator=lambda i, a, x: x >= 1)
-    chunks:     Dict[int, np.ndarray] = attr.ib(init=False, default={})
+    chunks:     Dict[int, np.ndarray] = attr.ib(init=False, factory=dict)
 
     def __len__(self) -> int:
         return self.n
@@ -43,7 +43,7 @@ class ChunkedRange:
 @attr.s
 class Permutation(Sized, Iterable[np.uint64]):
     n:  int         = attr.ib(validator=lambda i, a, x: x >= 1) # type: ignore
-    rs: RandomState = attr.ib(default=np.random.RandomState())
+    rs: RandomState = attr.ib(factory=np.random.RandomState)
     i:  int         = attr.ib(init=False, default=0)
 
     def __attrs_post_init__(self) -> None:
@@ -65,10 +65,13 @@ class Permutation(Sized, Iterable[np.uint64]):
         return self.perm[self.i - 1]
 
     def __getstate__(self) -> Dict[str, Any]:
-        return {'init_random_state': self.init_random_state, 'i': self.i}
+        return {'n': self.n, 'init_random_state': self.init_random_state, 'i': self.i}
 
     def __setstate__(self, state: Dict[str, Any]) -> None:
+        self.n, self.i = state['n'], 0
+        self.rs = RandomState()
         self.rs.set_state(state['init_random_state'])
+        self.__attrs_post_init__()
 
-        while self.i != state['i']:
+        for _ in range(state['i']):
             next(self)

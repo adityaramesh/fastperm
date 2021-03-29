@@ -5,7 +5,7 @@ def parse_requirements(filename):
 	return [line for line in lines if line and not line.startswith("#")]
 
 setup(name='fastperm',
-        version='0.3',
+        version='0.4',
         description='Package for online generation of large permutations without large upfront cost.',
         url='http://github.com/adityaramesh/fastperm',
         author='Aditya Ramesh',

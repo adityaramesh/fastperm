@@ -35,18 +35,17 @@ def test_3() -> None:
 
 def test_4() -> None:
     s = Permutation(1_000_000_000)
-    print(s.__dict__)
     print(next(s))
 
 def test_5() -> None:
     s = Permutation(1_000_000)
-    [next(s) for _ in range(1024)]
+    [next(s) for _ in range(32)]
 
     state = pickle.dumps(s)
-    xs = [next(s) for _ in range(1024)]
+    xs = [next(s) for _ in range(32)]
 
     s = pickle.loads(state)
-    ys = [next(s) for _ in range(1024)]
+    ys = [next(s) for _ in range(32)]
     assert xs == ys
 
 if __name__ == '__main__':
